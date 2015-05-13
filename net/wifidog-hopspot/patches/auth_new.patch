@@ -1,0 +1,18 @@
+--- a/src/auth.c	2014-12-12 16:51:52.862407225 +0530
++++ b/src/auth.c	2015-03-31 09:08:44.312862049 +0530
+@@ -184,10 +184,12 @@
+ 				"adding to firewall and redirecting them to portal", client->token, client->ip, client->mac);
+ 		client->fw_connection_state = FW_MARK_KNOWN;
+ 		fw_allow(client->ip, client->mac, FW_MARK_KNOWN);
+-        served_this_session++;
+-		safe_asprintf(&urlFragment, "%sgw_id=%s",
++        served_this_session++;        
++		safe_asprintf(&urlFragment, "%sgw_id=%s&mac=%s&token=%s",
+ 			auth_server->authserv_portal_script_path_fragment,
+-			config->gw_id
++			config->gw_id,
++			client->mac,
++			client->token
+ 		);
+ 		http_send_redirect_to_auth(r, urlFragment, "Redirect to portal");
+ 		free(urlFragment);

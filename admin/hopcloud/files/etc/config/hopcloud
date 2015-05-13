@@ -1,0 +1,5 @@
+
+config hopcloud 'credentials'
+    option account  'hopcloud_account_id'
+    option device   'hopcloud_device_key'
+

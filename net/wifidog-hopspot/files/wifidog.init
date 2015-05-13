@@ -1,0 +1,32 @@
+#!/bin/sh /etc/rc.common
+# Copyright (C) 2006 OpenWrt.org
+START=65
+EXTRA_COMMANDS="status"
+EXTRA_HELP="status Print the status of the service"
+
+start() {
+	/usr/bin/wifidog-init start
+    # wait for firewall rules to be setup
+    sleep 10
+    if  ! iptables -C WiFiDog_br-lan_Validate -m set --match-set fb dst -j ACCEPT 2>/dev/null; then
+        logger -t wifidog "Enabling extra firewall rules"
+        iptables -A WiFiDog_br-lan_Validate -m set --match-set fb dst -j ACCEPT
+    else
+        logger -t wifidog "Extra firewall rules already enabled. Bye."
+    fi
+
+}
+
+stop() {
+    if iptables -C WiFiDog_br-lan_Validate -m set --match-set fb dst -j ACCEPT 2>/dev/null; then
+        logger -t wifidog "Disabling extra firewall rules"
+        iptables -D WiFiDog_br-lan_Validate -m set --match-set fb dst -j ACCEPT
+    else
+        logger -t wifidog "Extra firewall rules already disabled. Bye."
+    fi
+	killall -9 wifidog || /usr/bin/wifidog-init stop
+}
+
+status() {
+	/usr/bin/wifidog-init status
+}
