@@ -8,9 +8,9 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=perlbase-common-sense
-PKG_VERSION:=3.73
-PKG_RELEASE:=1
-PKG_MD5SUM:=6da7455a43ab60ed21c2a5e3b3ddeda8
+PKG_VERSION:=3.74
+PKG_RELEASE:=2
+PKG_MD5SUM:=35b273147200c4c95eef7816f83e572d
 
 PKG_SOURCE_URL:=http://search.cpan.org/CPAN/authors/id/M/ML/MLEHMANN
 PKG_SOURCE:=common-sense-$(PKG_VERSION).tar.gz
