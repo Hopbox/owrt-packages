@@ -4,6 +4,8 @@
 # This is a free software, licensed under GNU General Public License v3.
 # See /LICENSE for more information.
 #
+# Includes content from github repository of @hongkongkiwi 
+#
 
 include $(TOPDIR)/rules.mk
 
@@ -21,21 +23,34 @@ PKG_LICENSE_FILES:=COPYING
 
 PKG_BUILD_PARALLEL:=1
 PKG_INSTALL:=1
+PKG_FIXUP:=autoreconf
 
 include $(INCLUDE_DIR)/package.mk
+
+define Package/libicapapi/Default
+	URL:=http://c-icap.sourceforge.net/
+	DEPENDS:=+libc +libpcre +libpthread +librt +zlib +libbz2
+endef
+
+define Package/libicapapi
+	$(call Package/libicapapi/Default)
+	SECTION:=libs
+	CATEGORY:=Libraries
+	TITLE:=ICAP API Library for C-ICAP Server
+endef
 
 define Package/c-icap
 	SECTION:=net
 	CATEGORY:=Network
 	SUBMENU:=Web Servers/Proxies
-	DEPENDS:=+libc +libpcre +libpthread +librt +zlib +libbz2
-	TITLE:=c-icap server for squid, clamav etc
+	DEPENDS:=+libicapapi
+	TITLE:=ICAP server for squid, clamav etc
 	URL:=http://c-icap.sourceforge.net/
 endef
 
 define Package/c-icap/description
 	c-icap server implements the ICAP protocol for use by proxy servers
-	like Squid-3.x etc. SquidClamav can be used for Anti-Virus scanning.
+	like Squid-3.x etc for content adaptation and filtering.
 endef
 
 CONFIGURE_ARGS += \
@@ -46,23 +61,39 @@ CONFIGURE_VARS += \
 	ac_cv_fcntl=yes \
 	ac_cv_10031b_ipc_sem=yes
 
-define Package/c-icap/install
-	$(INSTALL_DIR) $(1)/usr/bin
-	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/bin/c-icap $(1)/usr/bin/
-	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/bin/c-icap-client $(1)/usr/bin/
-	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/bin/c-icap-config $(1)/usr/bin/
-	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/bin/c-icap-stretch $(1)/usr/bin/
-	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/bin/c-icap-libicapapi-config $(1)/usr/bin/
-
-
-	$(INSTALL_DIR) $1/usr/include
-	$(CP) $(PKG_INSTALL_DIR)/usr/include/* $(1)/usr/include/
-
-	$(INSTALL_DIR) $1/usr/lib
-	$(CP) $(PKG_INSTALL_DIR)/usr/lib/* $(1)/usr/lib/
-	
-	$(INSTALL_DIR) $1/etc/c-icap/
-	$(CP) $(PKG_INSTALL_DIR)/etc/* $(1)/etc/c-icap/
+define Build/Prepare
+	$(call Build/Prepare/Default)
+	echo $(PKG_VERSION) > $(PKG_BUILD_DIR)/VERSION.m4
 endef
 
+define Build/InstallDev
+	$(INSTALL_DIR) $(2)/bin $(1)/usr/bin $(1)/usr/lib $(1)/usr/include
+	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/bin/c-icap-config $(1)/usr/bin/
+	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/bin/c-icap-libicapapi-config $(1)/usr/bin/
+	$(CP) $(PKG_INSTALL_DIR)/usr/lib/c_icap $(1)/usr/lib
+	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/lib/libicapapi.{la,so*} $(1)/usr/lib/
+	$(CP) $(PKG_INSTALL_DIR)/usr/include/c_icap $(1)/usr/include
+	$(SED) 's,^INCDIR=/usr/include,INCDIR=$(STAGING_DIR)/usr/include,g' $(1)/usr/bin/c-icap-config
+	$(SED) 's,^INCDIR2=/usr/include/c_icap,INCDIR2=$(STAGING_DIR)/usr/include/c_icap,g' $(1)/usr/bin/c-icap-config
+	$(SED) 's,^INCDIR=/usr/include,INCDIR=$(STAGING_DIR)/usr/include,g' $(1)/usr/bin/c-icap-libicapapi-config
+	$(SED) 's,^INCDIR2=/usr/include/c_icap,INCDIR2=$(STAGING_DIR)/usr/include/c_icap,g' $(1)/usr/bin/c-icap-libicapapi-config
+	ln -sf $(STAGING_DIR)/usr/bin/c-icap-config $(2)/bin/
+	ln -sf $(STAGING_DIR)/usr/bin/c-icap-libicapapi-config $(2)/bin/
+endef
+
+define Package/libicapapi/install
+	$(INSTALL_DIR) $(1)/usr/lib
+	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/lib/libicapapi.so* $(1)/usr/lib/
+	$(INSTALL_DIR) $(1)/usr/lib/c_icap
+	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/lib/c_icap/* $(1)/usr/lib/c_icap
+endef
+
+define Package/$(PKG_NAME)/install
+	$(INSTALL_DIR) $(1)/usr/bin
+	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/bin/* $(1)/usr/bin/
+	#$(INSTALL_DIR) $(1)/etc/config
+	#$(INSTALL_DATA) $(PKG_BUILD_DIR)/c-icap.conf $(1)/etc/config
+endef
+
+$(eval $(call BuildPackage,libicapapi))
 $(eval $(call BuildPackage,c-icap))
