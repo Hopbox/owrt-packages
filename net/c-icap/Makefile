@@ -28,6 +28,7 @@ define Package/c-icap
 	SECTION:=net
 	CATEGORY:=Network
 	SUBMENU:=Web Servers/Proxies
+	DEPENDS:=+libc +libpcre +libpthread +librt +zlib +libbz2
 	TITLE:=c-icap server for squid, clamav etc
 	URL:=http://c-icap.sourceforge.net/
 endef
