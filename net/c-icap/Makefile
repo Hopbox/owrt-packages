@@ -1,65 +1,66 @@
 #
-# Copyright (C) 2018 Unmukti Technology Pvt Ltd - unmukti.in
-# 
-# This is a free software, licensed under GNU General Public License v3.
-# See /LICENSE for more information.
+# Copyright (C) 2006-2014 OpenWrt.org
 #
-# Includes content from github repository of @hongkongkiwi 
+# This is free software, licensed under the GNU General Public License v2.
+# See /LICENSE for more information.
 #
 
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=c-icap
-PKG_VERSION:=0.5.3
+PKG_REV:=HEAD
+PKG_VERSION:=r$(PKG_REV)
 PKG_RELEASE:=1
 
-PKG_SOURCE:=c_icap-$(PKG_VERSION).tar.gz
-PKG_SOURCE_URL:=@SF/c-icap
-PKG_HASH:=0238508c94a406c7a2c8a0ff9659e7ba631554eda55001b43351bb68f85121d2
-PKG_BUILD_DIR:=$(BUILD_DIR)/c_icap-$(PKG_VERSION)
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
+PKG_SOURCE_URL:=https://svn.code.sf.net/p/c-icap/code/c-icap-server/trunk/c-icap
+PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
+PKG_SOURCE_VERSION:=$(PKG_REV)
+PKG_SOURCE_PROTO:=svn
 
-PKG_LICENSE:=LGPL-2.1+
-PKG_LICENSE_FILES:=COPYING
+PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(PKG_VERSION)
 
-PKG_BUILD_PARALLEL:=1
-PKG_INSTALL:=1
 PKG_FIXUP:=autoreconf
+
+PKG_INSTALL:=1
 
 include $(INCLUDE_DIR)/package.mk
 
 define Package/libicapapi/Default
-	URL:=http://c-icap.sourceforge.net/
-	DEPENDS:=+libc +libpcre +libpthread +librt +zlib +libbz2
+  URL:=http://c-icap.sourceforge.net/
+  DEPENDS:=+libc +libpcre +libpthread +librt +zlib +libbz2
+  MAINTAINER:=Jorge Vargas <jorge.vargas@saint-tech.com>
 endef
 
 define Package/libicapapi
-	$(call Package/libicapapi/Default)
-	SECTION:=libs
-	CATEGORY:=Libraries
-	TITLE:=ICAP API Library for C-ICAP Server
+  $(call Package/libicapapi/Default)
+  SECTION:=libs
+  CATEGORY:=Libraries
+  TITLE:=A library to simplify ICAP programming
 endef
 
-define Package/c-icap
-	SECTION:=net
-	CATEGORY:=Network
-	SUBMENU:=Web Servers/Proxies
-	DEPENDS:=+libicapapi
-	TITLE:=ICAP server for squid, clamav etc
-	URL:=http://c-icap.sourceforge.net/
+define Package/libicapapi/description
+	The goal of libicapapi is to simplify ICAP programming.
 endef
 
-define Package/c-icap/description
-	c-icap server implements the ICAP protocol for use by proxy servers
-	like Squid-3.x etc for content adaptation and filtering.
+define Package/$(PKG_NAME)
+  $(call Package/libicapapi/Default)
+  SUBMENU:=Web Servers/Proxies
+  SECTION:=net
+  CATEGORY:=Network
+  DEPENDS+=+libicapapi
+  TITLE:=An ICAP server
 endef
 
-CONFIGURE_ARGS += \
-	--prefix=/usr \
-	--enable-large-files
+define Package/$(PKG_NAME)/description
+	c-icap is an implementation of an ICAP server. It can be
+	used with HTTP proxies that support the ICAP protocol to
+	implement content adaptation and filtering services.
+endef
 
 CONFIGURE_VARS += \
-	ac_cv_fcntl=yes \
-	ac_cv_10031b_ipc_sem=yes
+	ac_cv_10031b_ipc_sem=yes \
+	ac_cv_fcntl=yes
 
 define Build/Prepare
 	$(call Build/Prepare/Default)
@@ -96,4 +97,4 @@ define Package/$(PKG_NAME)/install
 endef
 
 $(eval $(call BuildPackage,libicapapi))
-$(eval $(call BuildPackage,c-icap))
+$(eval $(call BuildPackage,$(PKG_NAME)))
