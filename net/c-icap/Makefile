@@ -41,6 +41,10 @@ CONFIGURE_ARGS += \
 	--prefix=/usr \
 	--enable-large-files
 
+CONFIGURE_VARS += \
+	ac_cv_fcntl=yes \
+	ac_cv_10031b_ipc_sem=yes
+
 define Package/c-icap/install
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/bin/c-icap $(1)/usr/bin/
