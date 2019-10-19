@@ -51,9 +51,11 @@ define Build/Prepare
 endef
 
 define Package/$(PKG_NAME)/install
-	$(INSTALL_DIR) $(1)/usr/bin
-	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/bin/* $(1)/usr/bin/
-	$(INSTALL_DIR) $(1)/etc/c-icap
+	$(INSTALL_DIR) $(1)/usr/lib/c_icap
+	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/lib/c_icap/* $(1)/usr/lib/c_icap
+	$(INSTALL_DIR) $(1)/usr/lib/squidclamav
+	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/lib/squidclamav/* $(1)/usr/lib/squidclamav
+	$(INSTALL_DIR) $(1)/etc/c-icap 
 	$(INSTALL_DATA) $(PKG_BUILD_DIR)/etc/squidclamav.conf $(1)/etc/c-icap
 endef
 
