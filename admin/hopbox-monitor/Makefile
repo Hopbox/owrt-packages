@@ -1,6 +1,6 @@
 include $(TOPDIR)/rules.mk
 
-PKG_NAME:=monitor
+PKG_NAME:=hopbox-monitor
 PKG_VERSION:=1.0.1
 PKG_RELEASE:=1
 
@@ -17,7 +17,6 @@ include $(INCLUDE_DIR)/package.mk
 define Package/monitor
   SECTION:=utils
   CATEGORY:=Utilities
-  DEPENDS:=+libubox
   TITLE:=Hopbox monitoring utility
   URL:=https://gitlab.hopbox.in/hopbox/monitor
 endef
