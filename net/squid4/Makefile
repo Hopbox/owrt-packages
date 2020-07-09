@@ -27,15 +27,15 @@ PKG_FIXUP:=autoreconf
 
 include $(INCLUDE_DIR)/package.mk
 
-define Package/squid/Default
+define Package/squid4/Default
   SECTION:=net
   CATEGORY:=Network
   SUBMENU:=Web Servers/Proxies
   URL:=http://www.squid-cache.org/
 endef
 
-define Package/squid
-  $(call Package/squid/Default)
+define Package/squid4
+  $(call Package/squid4/Default)
   MENU:=1
   DEPENDS:=+libpthread +librt +libltdl +libstdcpp +libatomic +USE_GLIBC:libbsd +libopenldap +libdb47 +libpam +libsasl2
   DEPENDS+= +SQUID_use-gnutls:libgnutls +SQUID_use-openssl:libopenssl
@@ -47,22 +47,22 @@ define Package/squid
   TITLE:=full-featured Web proxy cache
 endef
 
-define Package/squid/description
+define Package/squid4/description
   Squid is a caching proxy for the Web supporting HTTP, HTTPS, FTP, and more.
   It reduces bandwidth and improves response times by caching and reusing
   frequently-requested web pages.
 endef
 
-define Package/squid/config
+define Package/squid4/config
   source "$(SOURCE)/Config.in"
 endef
 
-define Package/squid/conffiles
+define Package/squid4/conffiles
   /etc/squid/squid.conf
 endef
 
 define Package/squid-mod-cachemgr
-  $(call Package/squid/Default)
+  $(call Package/squid4/Default)
   DEPENDS:=squid
   TITLE:=Web based proxy manager and reporting tool
 endef
@@ -127,7 +127,7 @@ define Build/Compile
 		install
 endef
 
-define Package/squid/install
+define Package/squid4/install
 	$(INSTALL_DIR) $(1)/usr/sbin
 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/sbin/squid $(1)/usr/sbin/
 
@@ -157,5 +157,5 @@ define Package/squid-mod-cachemgr/install
 	$(CP) $(PKG_INSTALL_DIR)/usr/lib/squid/cachemgr.cgi $(1)/www/cgi-bin/
 endef
 
-$(eval $(call BuildPackage,squid))
+$(eval $(call BuildPackage,squid4))
 $(eval $(call BuildPackage,squid-mod-cachemgr))
