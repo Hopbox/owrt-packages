@@ -1,4 +1,4 @@
-if PACKAGE_squid
+if PACKAGE_squid4
 
 	comment "Optional features"
 
