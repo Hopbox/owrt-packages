@@ -35,10 +35,12 @@ start_squid_instance() {
 		return 1
 	}
 
+	mkdir -p /var/run/squid && chown -R squid:squid /var/run/squid
+
 	config_dir=$(dirname $CONFIGFILE)
-	[ -d $config_dir ] || mkdir -p $config_dir && chown nobody:nogroup $config_dir
-	[ -d $coredump_dir ] || mkdir -p $coredump_dir && chown nobody:nogroup $coredump_dir
-	[ "$ssldb" ] && ( [ -f "$ssldb"/size ] || /usr/lib/squid/security_file_certgen -c -s $ssldb $ssldb_options && chown -R nobody:nogroup $ssldb )
+	[ -d $config_dir ] || mkdir -p $config_dir && chown squid:squid $config_dir
+	[ -d $coredump_dir ] || mkdir -p $coredump_dir && chown squid:squid $coredump_dir
+	[ "$ssldb" ] && ( [ -f "$ssldb"/size ] || /usr/lib/squid/security_file_certgen -c -s $ssldb $ssldb_options && chown -R squid:squid $ssldb )
 
 	cat $config_file > $CONFIGFILE
 	echo http_port $http_port $http_port_options >> $CONFIGFILE
@@ -48,10 +50,10 @@ start_squid_instance() {
 	cat $mime_table > $MIMETABLE
 	echo mime_table $MIMETABLE >> $CONFIGFILE
 	[ "$ssldb" ] && echo sslcrtd_program /usr/lib/squid/security_file_certgen -s $ssldb $ssldb_options >> $CONFIGFILE
-	$PROG -s -f $CONFIGFILE -N -z 2>/dev/null
+	$PROG -s -f $CONFIGFILE --foreground -z 2>/dev/null
 
 	procd_open_instance
-	procd_set_param command $PROG -s -f $CONFIGFILE -N
+	procd_set_param command $PROG -s -f $CONFIGFILE --foreground
 	procd_set_param file $CONFIGFILE
 	procd_set_param respawn
 	procd_close_instance
