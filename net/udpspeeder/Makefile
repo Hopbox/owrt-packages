@@ -1,6 +1,6 @@
 #
 # Copyright (c) 2017 Yu Wang <wangyucn@gmail.com>
-# Copyright (c) 2020 Nishant Sharma <nishant@unmukti.in>
+# Copyright (c) 2020 Nishant Sharma <nishant@hopbox.in>
 #
 # This is free software, licensed under MIT
 #
@@ -19,7 +19,7 @@ PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
 
 PKG_LICENSE:=MIT
 PKG_LICENSE_FILES:=LICENSE
-PKG_MAINTAINER:=Nishant Sharma <nishant@unmukti.in>
+PKG_MAINTAINER:=Nishant Sharma <nishant@hopbox.in>
 
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(PKG_VERSION)
 
@@ -52,6 +52,12 @@ endef
 define Package/udpspeeder/install
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/speederv2_cross $(1)/usr/bin/udpspeeder
+
+	$(INSTALL_DIR) $(1)/etc/config
+	$(INSTALL_CONF) ./files/udpspeeder-config $(1)/etc/config/udpspeeder
+
+	$(INSTALL_DIR) $(1)/etc/init.d
+	$(INSTALL_BIN) ./files/udpspeeder-config $(1)/etc/init.d/udpspeeder
 endef
 
 $(eval $(call BuildPackage,udpspeeder))
