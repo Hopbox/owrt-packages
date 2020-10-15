@@ -92,8 +92,12 @@ endef
 define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/bin/* $(1)/usr/bin/
+
 	#$(INSTALL_DIR) $(1)/etc/config
 	#$(INSTALL_DATA) $(PKG_BUILD_DIR)/c-icap.conf $(1)/etc/config
+
+	$(INSTALL_DIR) $(1)/etc/init.d/
+    $(INSTALL_BIN) ./files/c-icap.init $(1)/etc/init.d/c-icap
 endef
 
 $(eval $(call BuildPackage,libicapapi))
