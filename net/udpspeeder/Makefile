@@ -7,27 +7,23 @@
 
 include $(TOPDIR)/rules.mk
 
-PKG_NAME:=udpspeeder
-PKG_VERSION:=20200818.0
+PKG_NAME:=UDPspeeder
+PKG_VERSION:=20200818.1
 PKG_RELEASE:=1
 
-PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://github.com/wangyu-/UDPspeeder.git
-PKG_SOURCE_VERSION:=13d5e40473f354939dd196980a4e3fcc6affade8
-PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
+PKG_SOURCE_URL:=https://codeload.github.com/wangyu-/$(PKG_NAME)/tar.gz/$(PKG_VERSION)?
+PKG_HASH:=54bc6dc1283630ed78c033ae26b0f6af24bb92da17784ec64ae56d6e5ca73dd6
 
 PKG_LICENSE:=MIT
 PKG_LICENSE_FILES:=LICENSE
 PKG_MAINTAINER:=Nishant Sharma <nishant@hopbox.in>
 
-PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(PKG_VERSION)
-
 PKG_BUILD_PARALLEL:=1
 
 include $(INCLUDE_DIR)/package.mk
 
-define Package/udpspeeder
+define Package/UDPspeeder
 	SECTION:=net
 	CATEGORY:=Network
 	TITLE:=UDP Network Speed-Up Tool
@@ -35,7 +31,7 @@ define Package/udpspeeder
 	DEPENDS:= +libstdcpp +librt
 endef
 
-define Package/udpspeeder/description
+define Package/UDPspeeder/description
 	 A Tunnel which Improves your Network Quality on a High-latency Lossy Link by using Forward Error Correction,for All Traffics(TCP/UDP/ICMP)
 endef
 
@@ -49,7 +45,7 @@ define Build/Prepare
 	$(Build/Patch)
 endef
 
-define Package/udpspeeder/install
+define Package/UDPspeeder/install
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/speederv2_cross $(1)/usr/bin/udpspeeder
 
@@ -57,7 +53,7 @@ define Package/udpspeeder/install
 	$(INSTALL_CONF) ./files/udpspeeder-config $(1)/etc/config/udpspeeder
 
 	$(INSTALL_DIR) $(1)/etc/init.d
-	$(INSTALL_BIN) ./files/udpspeeder-config $(1)/etc/init.d/udpspeeder
+	$(INSTALL_BIN) ./files/udpspeeder-init $(1)/etc/init.d/udpspeeder
 endef
 
-$(eval $(call BuildPackage,udpspeeder))
+$(eval $(call BuildPackage,UDPspeeder))
