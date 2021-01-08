@@ -29,7 +29,7 @@ define Package/$(PKG_NAME)
   SUBMENU:=Web Servers/Proxies
   SECTION:=net
   CATEGORY:=Network
-  DEPENDS+=+c-icap +squid +clamav
+  DEPENDS+=+c-icap-server +squid +clamav
   TITLE:=Clamav ICAP service and redirector for Squid
 endef
 
