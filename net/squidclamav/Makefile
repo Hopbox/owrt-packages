@@ -11,17 +11,19 @@ PKG_NAME:=squidclamav
 PKG_VERSION:=7.1
 PKG_RELEASE:=1
 
-PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=https://github.com/darold/squidclamav.git
-PKG_SOURCE_VERSION:=ecc17ea8e035b609cb3db2abaf276a2d89a4c3c0
-PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
+PKG_SOURCE_URL:=https://codeload.github.com/darold/$(PKG_NAME)/tar.gz/v$(PKG_VERSION)?
+PKG_HASH:=08121d7db383093d9966798783798d1364d10c91d6cd38392813bdefc0b58de8
 
 PKG_LICENSE:=GPLv2+
+PKG_LICENSE_FILES:=COPYING
 
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(PKG_VERSION)
 
 PKG_FIXUP:=autoreconf
 PKG_INSTALL:=1
+
+PKG_MAINTAINER:=Nishant Sharma <nishant@hopbox.in>
 
 include $(INCLUDE_DIR)/package.mk
 

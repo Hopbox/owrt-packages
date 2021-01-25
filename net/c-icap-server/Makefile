@@ -16,7 +16,6 @@ PKG_PROTO:=git
 PKG_SOURCE:=$(PKG_SOURCE_NAME)_$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://codeload.github.com/c-icap/c-icap-server/tar.gz/$(PKG_SOURCE_NAME)_$(PKG_VERSION)?
 PKG_HASH:=79a228a1145ada3a96dfe0abdbfca2103f0d52f5c75117d71998a07433a9c5d7
-PKG_MIRROR_HASH:=skip
 
 PKG_LICENSE:=LGPL-2.1
 PKG_MAINTAINER:=Nishant Sharma <nishant@hopbox.in>
@@ -32,7 +31,7 @@ include $(INCLUDE_DIR)/package.mk
 define Package/libicapapi/Default
 	URL:=http://c-icap.sourceforge.net/
 	DEPENDS:=+libc +libpcre +libpthread +librt +zlib +libbz2 +libopenssl +libdb47 +libopenldap
-	MAINTAINER:=Jorge Vargas <jorge.vargas@saint-tech.com>
+	MAINTAINER:=Nishant Sharma <nishant@hopbox.in>
 endef
 
 define Package/libicapapi
@@ -65,6 +64,10 @@ CONFIGURE_VARS += \
 	ac_cv_10031b_ipc_sem=yes \
 	ac_cv_fcntl=yes
 
+CONFIGURE_ARGS += \
+	--config-cache \
+	--sysconfdir=/etc/c-icap 
+	
 define Build/Prepare
 	$(call Build/Prepare/Default)
 	echo $(PKG_VERSION) > $(PKG_BUILD_DIR)/VERSION.m4
@@ -96,8 +99,11 @@ define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/bin/* $(1)/usr/bin/
 
-	#$(INSTALL_DIR) $(1)/etc/config
-	#$(INSTALL_DATA) $(PKG_BUILD_DIR)/c-icap.conf $(1)/etc/config
+	$(INSTALL_DIR) $(1)/etc/c-icap
+	$(INSTALL_DATA) $(PKG_BUILD_DIR)/c-icap.conf $(1)/etc/c-icap
+
+	$(INSTALL_DIR) $(1)/etc/c-icap
+	$(INSTALL_DATA) $(PKG_BUILD_DIR)/c-icap.magic $(1)/etc/c-icap
 
 	$(INSTALL_DIR) $(1)/etc/init.d/
 	$(INSTALL_BIN) ./files/c-icap.init $(1)/etc/init.d/c-icap
