@@ -85,12 +85,34 @@ define Package/snort3/install
 		$(PKG_INSTALL_DIR)/usr/include/snort/lua/snort_plugin.lua \
 		$(1)/usr/share/lua/
 
-	$(CP) \
-		$(PKG_INSTALL_DIR)/usr/include/snort/lua/snort_config.lua \
-		$(1)/usr/share/lua/
-
 	$(INSTALL_DIR) $(1)/etc/snort
 
+	$(CP) \
+		$(PKG_INSTALL_DIR)/usr/etc/snort/balanced.lua \
+		$(1)/etc/snort/
+	$(CP) \
+		$(PKG_INSTALL_DIR)/usr/etc/snort/file_magic.lua \
+		$(1)/etc/snort/
+	$(CP) \
+		$(PKG_INSTALL_DIR)/usr/etc/snort/inline.lua \
+		$(1)/etc/snort/
+	$(CP) \
+		$(PKG_INSTALL_DIR)/usr/etc/snort/max_detect.lua \
+		$(1)/etc/snort/
+	$(CP) \
+		$(PKG_INSTALL_DIR)/usr/etc/snort/security.lua \
+		$(1)/etc/snort/
+	$(CP) \
+		$(PKG_INSTALL_DIR)/usr/etc/snort/snort_defaults.lua \
+		$(1)/etc/snort/
+	$(CP) \
+		$(PKG_INSTALL_DIR)/usr/etc/snort/snort.lua \
+		$(1)/etc/snort/
+	$(CP) \
+		$(PKG_INSTALL_DIR)/usr/etc/snort/talos.lua \
+		$(1)/etc/snort/
+
+	
 	$(INSTALL_DIR) $(1)/etc/init.d
 	$(INSTALL_BIN) \
 		./files/snort.init \
