@@ -35,12 +35,12 @@ start_squid_instance() {
 		return 1
 	}
 
-	mkdir -p /var/run/squid && chown -R squid:squid /var/run/squid
+	mkdir -p /var/run/squid && chown -R nobody:nogroup /var/run/squid
 
 	config_dir=$(dirname $CONFIGFILE)
-	[ -d $config_dir ] || mkdir -p $config_dir && chown squid:squid $config_dir
-	[ -d $coredump_dir ] || mkdir -p $coredump_dir && chown squid:squid $coredump_dir
-	[ "$ssldb" ] && ( [ -f "$ssldb"/size ] || /usr/lib/squid/security_file_certgen -c -s $ssldb $ssldb_options && chown -R squid:squid $ssldb )
+	[ -d $config_dir ] || mkdir -p $config_dir && chown nobody:nogroup $config_dir
+	[ -d $coredump_dir ] || mkdir -p $coredump_dir && chown nobody:nogroup $coredump_dir
+	[ "$ssldb" ] && ( [ -f "$ssldb"/size ] || /usr/lib/squid/security_file_certgen -c -s $ssldb $ssldb_options && chown -R nobody:nogroup $ssldb )
 
 	cat $config_file > $CONFIGFILE
 	echo http_port $http_port $http_port_options >> $CONFIGFILE
